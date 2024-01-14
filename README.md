@@ -5,12 +5,16 @@ A custom golang-library to orchestrate mutiple pods using etcd. Jobs can be allo
 > This is mac installation setup.
 
 - Install etcd service
-  - ```$ brew install etcd```
-  - ```$ brew services start etcd```
+  ```
+  $ brew install etcd
+  $ brew services start etcd
+  ```
 - clone the repo 
-  - ``` $ git clone https://github.com/anubhavitis/etcd-custom-orchestrator.git ```
-  - ```$ go mod tidy```
-  - ```$ go mod vendor```
+   ``` 
+   $ git clone https://github.com/anubhavitis/etcd-custom-orchestrator.git
+   $ go mod tidy
+   $ go mod vendor
+   ```
 
 ### Steps to Run
 
