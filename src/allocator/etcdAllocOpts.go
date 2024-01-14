@@ -1,7 +1,7 @@
-package etcd_alloc
+package allocator
 
 import (
-	cs_alloc "etcd_test/cs-alloc"
+	"job-allocator/src/registory"
 
 	"github.com/google/uuid"
 	etcd "go.etcd.io/etcd/client/v3"
@@ -11,7 +11,7 @@ type EtcdAllocOp struct {
 	config         etcd.Config
 	basePath       string
 	nodeId         string
-	allocStrategy  cs_alloc.AllocStrategy
+	allocStrategy  registory.AllocStrategy
 	keyListenerMap *map[string]func(watchChan *etcd.WatchChan)
 }
 
@@ -50,7 +50,7 @@ func WithRandomNodeId() EtcdAllocOption {
 	}
 }
 
-func WithAllocStrategy(allocStrategy cs_alloc.AllocStrategy) EtcdAllocOption {
+func WithAllocStrategy(allocStrategy registory.AllocStrategy) EtcdAllocOption {
 	return func(op *EtcdAllocOp) {
 		op.allocStrategy = allocStrategy
 	}

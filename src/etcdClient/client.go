@@ -2,10 +2,10 @@ package etcdClient
 
 import (
 	"context"
-	cs_alloc "etcd_test/cs-alloc"
-	hash_alloc "etcd_test/cs-alloc/alloc_strategy"
-	etcd_alloc "etcd_test/cs-alloc/etcd"
 	"fmt"
+	"job-allocator/src/allocator"
+	"job-allocator/src/registory"
+	"job-allocator/src/strategy"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,15 +13,15 @@ import (
 )
 
 func Setup() {
-	alloc := etcd_alloc.Configure(
-		etcd_alloc.WithConfig(etcd.Config{
+	alloc := allocator.Configure(
+		allocator.WithConfig(etcd.Config{
 			Endpoints:   []string{"0.0.0.0:2379"},
 			DialTimeout: 2 * time.Second,
 		}),
-		etcd_alloc.WithMyNodeId("my-node-id-"+uuid.NewString()),
-		etcd_alloc.WithBasePath("/etcd-test/test/registry"),
-		etcd_alloc.WithAllocStrategy(hash_alloc.HashAllocator),
-		etcd_alloc.WithKeyListenerMap(GetKeyActionMap()),
+		allocator.WithMyNodeId("my-node-id-"+uuid.NewString()),
+		allocator.WithBasePath("/etcd-test/test/registry"),
+		allocator.WithAllocStrategy(strategy.HashAllocator),
+		allocator.WithKeyListenerMap(GetKeyActionMap()),
 	)
 
 	jobConfigs := GetEtcdJobs()
@@ -29,12 +29,12 @@ func Setup() {
 	alloc.FinalizeJobs()
 }
 
-func SubmitJobs(alloc *etcd_alloc.EtcdAlloc, jobConfigs []Job) map[string]bool {
+func SubmitJobs(alloc *allocator.EtcdAlloc, jobConfigs []Job) map[string]bool {
 	resp := make(map[string]bool)
 	for i := range jobConfigs {
 		job := jobConfigs[i]
 
-		success, err := alloc.AppendOrOverwriteJob(job.Name, &cs_alloc.Job{
+		success, err := alloc.AppendOrOverwriteJob(job.Name, &registory.Job{
 			JobFunc: func(ctx context.Context) {
 				for {
 					select {
@@ -60,7 +60,7 @@ func SubmitJobs(alloc *etcd_alloc.EtcdAlloc, jobConfigs []Job) map[string]bool {
 	return resp
 }
 
-func RemoveJobs(etcdAlloc *etcd_alloc.EtcdAlloc, jobs []Job) (resp map[string]bool) {
+func RemoveJobs(etcdAlloc *allocator.EtcdAlloc, jobs []Job) (resp map[string]bool) {
 	resp = make(map[string]bool)
 	jobRegistry := etcdAlloc.JobRegistry()
 	runningJobs := jobRegistry.RunningJobList()

@@ -1,4 +1,4 @@
-package hash_alloc
+package strategy
 
 import (
 	"errors"

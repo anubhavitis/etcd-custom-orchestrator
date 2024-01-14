@@ -1,9 +1,9 @@
 package main
 
 import (
-	"etcd_test/controller"
-	"etcd_test/etcdClient"
 	"flag"
+	"job-allocator/src/controller"
+	"job-allocator/src/etcdClient"
 )
 
 func init() {

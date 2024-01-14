@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"etcd_test/etcdClient"
+	"job-allocator/src/etcdClient"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

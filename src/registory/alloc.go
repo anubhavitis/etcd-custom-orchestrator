@@ -1,4 +1,4 @@
-package cs_alloc
+package registory
 
 import (
 	"sync"

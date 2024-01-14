@@ -1,4 +1,4 @@
-package etcd_alloc
+package allocator
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	cs_alloc "etcd_test/cs-alloc"
+	"job-allocator/src/registory"
 
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	etcd "go.etcd.io/etcd/client/v3"
@@ -17,8 +17,8 @@ type EtcdAlloc struct {
 	client             *etcd.Client
 	basePath           string
 	myNodeId           string
-	allocStrategy      cs_alloc.AllocStrategy
-	jobRegistry        *cs_alloc.JobRegistry
+	allocStrategy      registory.AllocStrategy
+	jobRegistry        *registory.JobRegistry
 	runtimeJobRegistry []string
 	keyListenerMap     *map[string]func(watchChan *etcd.WatchChan)
 }
@@ -27,11 +27,11 @@ func (etcdAlloc *EtcdAlloc) MyNodeId() string {
 	return etcdAlloc.myNodeId
 }
 
-func (etcdAlloc *EtcdAlloc) AllocStrategy() cs_alloc.AllocStrategy {
+func (etcdAlloc *EtcdAlloc) AllocStrategy() registory.AllocStrategy {
 	return etcdAlloc.allocStrategy
 }
 
-func (etcdAlloc *EtcdAlloc) JobRegistry() *cs_alloc.JobRegistry {
+func (etcdAlloc *EtcdAlloc) JobRegistry() *registory.JobRegistry {
 	return etcdAlloc.jobRegistry
 }
 
@@ -54,7 +54,7 @@ func Configure(opts ...EtcdAllocOption) *EtcdAlloc {
 			basePath:       op.basePath,
 			myNodeId:       op.nodeId,
 			allocStrategy:  op.allocStrategy,
-			jobRegistry:    cs_alloc.NewJobRegistry(),
+			jobRegistry:    registory.NewJobRegistry(),
 			keyListenerMap: op.keyListenerMap,
 		}
 	})
@@ -125,7 +125,7 @@ func (etcdAlloc *EtcdAlloc) watchKeyAndPerformAction(key string, action func(cha
 	action(&watchChan)
 }
 
-func (etcdAlloc *EtcdAlloc) AppendOrOverwriteJob(jobKey string, job *cs_alloc.Job) (bool, error) {
+func (etcdAlloc *EtcdAlloc) AppendOrOverwriteJob(jobKey string, job *registory.Job) (bool, error) {
 	err := etcdAlloc.jobRegistry.AddJob(jobKey, job)
 	if err != nil {
 		return false, err
