@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"job-allocator/src/allocator"
-	"job-allocator/src/registory"
 
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	etcd "go.etcd.io/etcd/client/v3"
@@ -60,7 +59,7 @@ func registryListener(channel *etcd.WatchChan) {
 
 func UpdateJobHandler(jobName string) {
 	etcdAlloc := allocator.GetInstance()
-	jobRegistry := registory.JobRegistry{}
+	jobRegistry := etcdAlloc.JobRegistry()
 
 	var updatedJobs []string
 	json.Unmarshal([]byte(jobName), &updatedJobs)
