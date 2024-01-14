@@ -23,8 +23,6 @@ func (jc *JobContext) Refresh() {
 	}
 }
 
-type AllocStrategy func(jobKey string, myNodeId string, allNodeIds []string) (bool, error)
-
 type Alloc interface {
 	AppendOrOverwriteJob(jobKey string, job Job) (bool, error)
 	FinalizeJobs() error

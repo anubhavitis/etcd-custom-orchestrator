@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"job-allocator/src/registory"
+	"job-allocator/src/strategy"
 
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	etcd "go.etcd.io/etcd/client/v3"
@@ -17,7 +18,7 @@ type EtcdAlloc struct {
 	client             *etcd.Client
 	basePath           string
 	myNodeId           string
-	allocStrategy      registory.AllocStrategy
+	allocStrategy      strategy.AllocStrategy
 	jobRegistry        *registory.JobRegistry
 	runtimeJobRegistry []string
 	keyListenerMap     *map[string]func(watchChan *etcd.WatchChan)
@@ -27,7 +28,7 @@ func (etcdAlloc *EtcdAlloc) MyNodeId() string {
 	return etcdAlloc.myNodeId
 }
 
-func (etcdAlloc *EtcdAlloc) AllocStrategy() registory.AllocStrategy {
+func (etcdAlloc *EtcdAlloc) AllocStrategy() strategy.AllocStrategy {
 	return etcdAlloc.allocStrategy
 }
 

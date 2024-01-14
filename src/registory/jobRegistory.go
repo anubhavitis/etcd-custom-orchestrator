@@ -3,6 +3,7 @@ package registory
 import (
 	"errors"
 	"fmt"
+	"job-allocator/src/strategy"
 	"sync"
 )
 
@@ -85,7 +86,7 @@ func (jobRegistry *JobRegistry) AddJob(jobKey string, job *Job) error {
 	return nil
 }
 
-func (jobRegistry *JobRegistry) AllocAllJobs(nodes []string, strategy AllocStrategy, myNodeId string) error {
+func (jobRegistry *JobRegistry) AllocAllJobs(nodes []string, strategy strategy.AllocStrategy, myNodeId string) error {
 	if jobRegistry.status != JOB_REGISTRY_FINAL {
 		return errors.New("jobRegistry is not finalised")
 	}
@@ -96,7 +97,7 @@ func (jobRegistry *JobRegistry) AllocAllJobs(nodes []string, strategy AllocStrat
 
 }
 
-func (jobRegistry *JobRegistry) RefreshAllJobs(nodes []string, strategy AllocStrategy, myNodeId string) error {
+func (jobRegistry *JobRegistry) RefreshAllJobs(nodes []string, strategy strategy.AllocStrategy, myNodeId string) error {
 	if jobRegistry.status != JOB_REGISTRY_FINAL {
 		return errors.New("jobRegistry is not finalised")
 	}
@@ -106,7 +107,7 @@ func (jobRegistry *JobRegistry) RefreshAllJobs(nodes []string, strategy AllocStr
 
 }
 
-func (jobRegistry *JobRegistry) AllocJobs(nodes []string, jobNames []string, strategy AllocStrategy, myNodeId string) (err error) {
+func (jobRegistry *JobRegistry) AllocJobs(nodes []string, jobNames []string, strategy strategy.AllocStrategy, myNodeId string) (err error) {
 	jobRegistry.mutexForRegistryOp.Lock()
 	defer jobRegistry.mutexForRegistryOp.Unlock()
 
@@ -134,7 +135,7 @@ func (jobRegistry *JobRegistry) AllocJobs(nodes []string, jobNames []string, str
 	return nil
 }
 
-func (jobRegistry *JobRegistry) RefreshJobs(nodes []string, jobNames []string, strategy AllocStrategy, myNodeId string) (err error) {
+func (jobRegistry *JobRegistry) RefreshJobs(nodes []string, jobNames []string, strategy strategy.AllocStrategy, myNodeId string) (err error) {
 	jobRegistry.mutexForRegistryOp.Lock()
 	defer jobRegistry.mutexForRegistryOp.Unlock()
 
